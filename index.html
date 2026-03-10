@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+  <head>
+    <meta charset="utf-8" />
+    <title>GitHub Issues Tracker</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <link
+      href="https://cdn.jsdelivr.net/npm/daisyui@latest/dist/full.min.css"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body>
+    <!-- login section -->
+    <div
+      id="login-section"
+      class="min-h-screen flex items-center justify-center bg-slate-50 p-4"
+    >
+      <div
+        class="card w-full max-w-md bg-base-100 border-primary shadow-sm rounded-2xl"
+      >
+        <div class="card-body items-center p-8">
+          <img
+            src="./B13-A5-Github-Issue-Tracker/assets/github-logo.png"
+            alt="GitHub"
+            class="w-20 h-20 mb-2"
+          />
+          <h2 class="card-title text-2xl font-bold">GitHub Issues Tracker</h2>
+          <p class="text-sm text-base-content/60 mb-6">
+            Sign in to manage your issues
+          </p>
+
+          <form class="w-full">
+            <div class="form-control w-full">
+              <label class="label"
+                ><span class="label-text font-semibold">Username</span></label
+              >
+              <input
+                type="text"
+                id="username-input"
+                placeholder="Enter Username"
+                class="input input-bordered w-full"
+              />
+              <label class="label pb-0"
+                ><span class="label-text-alt text-primary font-medium"
+                  >Default: admin</span
+                ></label
+              >
+            </div>
+            <div class="form-control w-full mt-4">
+              <label class="label"
+                ><span class="label-text font-semibold">Password</span></label
+              >
+              <input
+                type="password"
+                id="password-input"
+                placeholder="Enter Password"
+                class="input input-bordered w-full"
+              />
+              <label class="label pb-0"
+                ><span class="label-text-alt text-primary font-medium"
+                  >Default: admin123</span
+                ></label
+              >
+            </div>
+            <button
+              id="login-btn"
+              type="button"
+              class="btn btn-primary w-full mt-6 normal-case text-base"
+            >
+              Sign In
+            </button>
+          </form>
+
+          <div class="divider text-sm font-medium mt-6 mb-2">OR</div>
+          <div class="w-full bg-base-200/50 rounded-xl p-5 text-center mt-2">
+            <p class="text-xs text-base-content/50 mb-3 font-medium">
+              Demo Credentials:
+            </p>
+            <p class="text-sm">
+              <span class="font-semibold">Username:</span> admin
+            </p>
+            <p class="text-sm">
+              <span class="font-semibold">Password:</span> admin123
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- main section -->
+    <div id="main-app" class="hidden min-h-screen bg-slate-100 font-sans pb-10">
+      <div class="navbar bg-base-100 shadow-sm px-4 py-4 md:px-8">
+        <div class="flex-1 flex items-center gap-2">
+          <img
+            src="./B13-A5-Github-Issue-Tracker/assets/github-logo.png"
+            alt="Logo"
+            class="w-8 h-8"
+          />
+          <a class="text-xl font-bold text-gray-800">GitHub Issues Tracker</a>
+        </div>
+        <div class="flex-none gap-3">
+          <div class="form-control relative hidden md:block">
+            <input
+              type="text"
+              id="search-input"
+              placeholder="🔍 Search issues..."
+              class="input input-bordered w-full max-w-xs bg-gray-50"
+            />
+          </div>
+          <button
+            class="btn bg-blue-600 hover:bg-blue-700 text-white border-none normal-case"
+          >
+            + New Issue
+          </button>
+        </div>
+      </div>
+
+      <div class="p-4 md:p-8 max-w-7xl mx-auto">
+        <div class="flex justify-center md:justify-start mb-6">
+          <div class="tabs tabs-boxed bg-base-100 shadow-sm p-1 rounded-lg">
+            <a class="tab tab-active px-8 rounded-md font-medium" id="tab-all"
+              >All</a
+            >
+            <a
+              class="tab px-8 rounded-md font-medium text-gray-500"
+              id="tab-open"
+              >Open</a
+            >
+            <a
+              class="tab px-8 rounded-md font-medium text-gray-500"
+              id="tab-closed"
+              >Closed</a
+            >
+          </div>
+        </div>
+
+        <div
+          class="bg-base-100 p-6 rounded-t-xl shadow-sm flex flex-col md:flex-row justify-between items-center border-b border-gray-100"
+        >
+          <div class="flex items-center gap-4">
+            <div
+              class="w-10 h-10 rounded-full bg-purple-100 flex items-center justify-center text-purple-600 text-xl font-bold"
+            >
+              <img
+                src="./B13-A5-Github-Issue-Tracker/assets/Aperture.png"
+                alt="aperture"
+              />
+            </div>
+            <div>
+              <h3 class="text-xl font-bold text-gray-800">
+                <span id="issue-count">0</span> Issues
+              </h3>
+              <p class="text-sm text-gray-500">
+                Track and manage your project issues
+              </p>
+            </div>
+          </div>
+          <div
+            class="flex gap-4 mt-4 md:mt-0 text-sm font-medium text-gray-600"
+          >
+            <div class="flex items-center gap-2">
+              <span class="w-3 h-3 rounded-full bg-green-500"></span> Open
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="w-3 h-3 rounded-full bg-purple-500"></span> Closed
+            </div>
+          </div>
+        </div>
+
+        <div
+          id="loading-spinner"
+          class="hidden bg-base-100 p-10 flex justify-center"
+        >
+          <span class="loading loading-spinner loading-lg text-blue-600"></span>
+        </div>
+
+        <div
+          id="issues-container"
+          class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 bg-base-100 p-6 rounded-b-xl shadow-sm"
+        ></div>
+      </div>
+    </div>
+    <script src="script.js"></script>
+  </body>
+</html>
