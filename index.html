@@ -169,7 +169,7 @@
             </div>
           </div>
         </div>
-
+        <!-- loading spinner -->
         <div
           id="loading-spinner"
           class="hidden bg-base-100 p-10 flex justify-center"
@@ -184,6 +184,20 @@
       </div>
     </div>
     <!-- main section ends -->
+    <!-- modal -->
+    <dialog id="issue-modal" class="modal">
+      <div class="modal-box w-11/12 max-w-2xl bg-white shadow-xl">
+        <form method="dialog">
+          <button
+            class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2 text-gray-500"
+          >
+            ✕
+          </button>
+        </form>
+
+        <div id="modal-content"></div>
+      </div>
+    </dialog>
     <script src="script.js"></script>
   </body>
 </html>

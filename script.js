@@ -157,3 +157,39 @@ searchInput.addEventListener("input", function (event) {
   });
   renderIssues(searchedIssues);
 });
+
+// modal
+function openModal(id) {
+  const modal = document.getElementById("issue-modal");
+  const modalContent = document.getElementById("modal-content");
+
+  const clickedIssue = allIssuesData.find(function (issue) {
+    const issueId = issue.id || issue._id;
+    return String(issueId) === String(id);
+  });
+
+  if (!clickedIssue) return;
+
+  const formattedDate = clickedIssue.createdAt
+    ? new Date(clickedIssue.createdAt).toLocaleDateString()
+    : "Unknown Date";
+
+  modalContent.innerHTML = `
+    <h3 class="font-bold text-2xl text-gray-800 mb-4">${clickedIssue.title}</h3>
+    
+    <div class="flex gap-2 mb-6">
+      <span class="px-3 py-1 rounded-full text-xs font-bold uppercase ${clickedIssue.status === "open" ? "bg-green-100 text-green-700" : "bg-purple-100 text-purple-700"}">${clickedIssue.status}</span>
+      <span class="px-3 py-1 rounded-full text-xs font-bold uppercase bg-gray-100 text-gray-700">${clickedIssue.priority || "Normal"}</span>
+    </div>
+    
+    <div class="bg-gray-50 rounded-lg p-5 mb-4 border border-gray-100">
+      <p class="text-sm text-gray-600 ">${clickedIssue.description}</p>
+    </div>
+    
+    <div class="flex justify-between items-center text-xs text-gray-400 font-medium border-t border-gray-100 pt-4 mt-6">
+      <span>Reported by: <span class="text-gray-600">${clickedIssue.author || "Unknown"}</span></span>
+      <span>Date: ${formattedDate}</span>
+    </div>
+  `;
+  modal.showModal();
+}
