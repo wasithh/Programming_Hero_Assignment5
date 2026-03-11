@@ -4,6 +4,10 @@ const passwordInput = document.getElementById("password-input");
 const loginBtn = document.getElementById("login-btn");
 const mainApp = document.getElementById("main-app");
 const issuesContainer = document.getElementById("issues-container");
+// toggle elements
+const tabAll = document.getElementById("tab-all");
+const tabOpen = document.getElementById("tab-open");
+const tabClosed = document.getElementById("tab-closed");
 
 // empty array to fetch data globally
 let allIssuesData = [];
@@ -99,3 +103,45 @@ function renderIssues(issues) {
     issuesContainer.innerHTML += cardHTML;
   });
 }
+
+// tab styling
+function setActiveTab(clickedTab) {
+  const allTabs = [tabAll, tabOpen, tabClosed];
+
+  // 1. Reset all tabs to look gray and inactive
+  allTabs.forEach(function (tab) {
+    tab.classList.remove("tab-active");
+    tab.classList.add("text-gray-500");
+  });
+
+  // 2. Make the clicked tab look active
+  clickedTab.classList.add("tab-active");
+  clickedTab.classList.remove("text-gray-500");
+}
+
+// event listeners for tabs
+
+// all tab
+tabAll.addEventListener("click", function () {
+  setActiveTab(tabAll);
+  renderIssues(allIssuesData);
+});
+
+// open tab
+tabOpen.addEventListener("click", function () {
+  setActiveTab(tabOpen);
+
+  const openIssues = allIssuesData.filter(function (issue) {
+    return issue.status === "open";
+  });
+  renderIssues(openIssues);
+});
+
+// closed tab
+tabClosed.addEventListener("click", function () {
+  setActiveTab(tabClosed);
+  const closedIssues = allIssuesData.filter(function (issue) {
+    return issue.status === "closed";
+  });
+  renderIssues(closedIssues);
+});
