@@ -16,6 +16,8 @@ let allIssuesData = [];
 
 // Hides the login page and shows main section
 loginBtn.addEventListener("click", function (event) {
+  event.preventDefault();
+
   const typedUsername = usernameInput.value;
   const typedPassword = passwordInput.value;
 
@@ -56,8 +58,8 @@ function renderIssues(issues) {
   }
   // looping the cards
   issues.forEach(function (issue) {
-    const formattedDate = issues.createdAt
-      ? new Date(issues.createdAt).toLocaleDateString()
+    const formattedDate = issue.createdAt
+      ? new Date(issue.createdAt).toLocaleDateString()
       : "Unknown Date";
 
     const topBorderColor =
@@ -66,20 +68,31 @@ function renderIssues(issues) {
     const displayId = String(actualId).slice(-4);
     const author = issue.author || "Unknown";
 
-    // priority colors
-    let priorityColor = "bg-gray-200 text-gray-700";
-    if (issues.priority === "High") priorityColor = "bg-red-100 text-red-600";
-    if (issue.priority === "Medium")
-      priorityColor = "bg-yellow-100 text-yellow-600";
+    // priority color
+    const currentPriority = issue.priority
+      ? issue.priority.toLowerCase()
+      : "normal";
+    let priorityColor = "bg-slate-100 text-slate-500";
+
+    if (currentPriority === "high") {
+      priorityColor = "bg-red-100 text-red-500";
+    } else if (currentPriority === "medium") {
+      priorityColor = "bg-orange-100 text-orange-500";
+    }
 
     // closed or open
     const statusIcon =
       issue.status === "open"
         ? "./B13-A5-Github-Issue-Tracker/assets/Open-Status.png"
-        : "B13-A5-Github-Issue-Tracker/assets/Closed-Status.png";
+        : "./B13-A5-Github-Issue-Tracker/assets/Closed-Status.png";
 
-    //Labels HTML
     let labelsHTML = "";
+    if (issue.labels && Array.isArray(issue.labels)) {
+      issue.labels.forEach((label) => {
+        const labelText = typeof label === "object" ? label.name : label;
+        labelsHTML += `<span class="px-2 py-1 border border-gray-200 rounded-full text-[10px] font-bold text-gray-500 uppercase">${labelText}</span> `;
+      });
+    }
 
     const cardHTML = `
       <div class="card bg-white border-t-4 ${topBorderColor} shadow-sm border border-gray-100 hover:shadow-md transition-shadow cursor-pointer" onclick="openModal('${actualId}')">
@@ -149,14 +162,16 @@ tabClosed.addEventListener("click", function () {
 });
 
 // search bar
-searchInput.addEventListener("input", function (event) {
-  const typedText = event.target.value.toLowerCase();
-  const searchedIssues = allIssuesData.filter(function (issue) {
-    const title = issue.title ? issue.title.toLowerCase() : "";
-    return title.includes(typedText);
+if (searchInput) {
+  searchInput.addEventListener("input", function (event) {
+    const typedText = event.target.value.toLowerCase();
+    const searchedIssues = allIssuesData.filter(function (issue) {
+      const title = issue.title ? issue.title.toLowerCase() : "";
+      return title.includes(typedText);
+    });
+    renderIssues(searchedIssues);
   });
-  renderIssues(searchedIssues);
-});
+}
 
 // modal
 function openModal(id) {
@@ -174,12 +189,28 @@ function openModal(id) {
     ? new Date(clickedIssue.createdAt).toLocaleDateString()
     : "Unknown Date";
 
+  // Match the exact colors for the modal badges!
+  const modalPriority = clickedIssue.priority
+    ? clickedIssue.priority.toLowerCase()
+    : "normal";
+
+  const priorityColor =
+    modalPriority === "high"
+      ? "bg-red-100 text-red-500"
+      : modalPriority === "medium"
+        ? "bg-orange-100 text-orange-500"
+        : "bg-slate-100 text-slate-500";
+  const statusColor =
+    clickedIssue.status === "open"
+      ? "bg-green-100 text-green-700"
+      : "bg-red-100 text-red-700";
+
   modalContent.innerHTML = `
     <h3 class="font-bold text-2xl text-gray-800 mb-4">${clickedIssue.title}</h3>
     
     <div class="flex gap-2 mb-6">
-      <span class="px-3 py-1 rounded-full text-xs font-bold uppercase ${clickedIssue.status === "open" ? "bg-green-100 text-green-700" : "bg-purple-100 text-purple-700"}">${clickedIssue.status}</span>
-      <span class="px-3 py-1 rounded-full text-xs font-bold uppercase bg-gray-100 text-gray-700">${clickedIssue.priority || "Normal"}</span>
+      <span class="px-3 py-1 rounded-full text-xs font-bold uppercase ${statusColor}">${clickedIssue.status}</span>
+      <span class="px-3 py-1 rounded-full text-xs font-bold uppercase ${priorityColor}">${clickedIssue.priority || "Normal"}</span>
     </div>
     
     <div class="bg-gray-50 rounded-lg p-5 mb-4 border border-gray-100">
