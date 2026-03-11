@@ -8,6 +8,8 @@ const issuesContainer = document.getElementById("issues-container");
 const tabAll = document.getElementById("tab-all");
 const tabOpen = document.getElementById("tab-open");
 const tabClosed = document.getElementById("tab-closed");
+// search option
+const searchInput = document.getElementById("search-input");
 
 // empty array to fetch data globally
 let allIssuesData = [];
@@ -144,4 +146,14 @@ tabClosed.addEventListener("click", function () {
     return issue.status === "closed";
   });
   renderIssues(closedIssues);
+});
+
+// search bar
+searchInput.addEventListener("input", function (event) {
+  const typedText = event.target.value.toLowerCase();
+  const searchedIssues = allIssuesData.filter(function (issue) {
+    const title = issue.title ? issue.title.toLowerCase() : "";
+    return title.includes(typedText);
+  });
+  renderIssues(searchedIssues);
 });
